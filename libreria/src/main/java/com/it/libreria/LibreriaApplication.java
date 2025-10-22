@@ -8,7 +8,7 @@ public class LibreriaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LibreriaApplication.class, args);
-		System.out.println(" \n \n run libreria in corso .. \n \n ");
+		System.out.println(" \n \n --> run libreria .. \n \n ");
 	}
 
 }

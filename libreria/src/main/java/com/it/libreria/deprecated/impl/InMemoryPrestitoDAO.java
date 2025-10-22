@@ -1,6 +1,6 @@
-package com.it.libreria.dao.impl;
+package com.it.libreria.deprecated.impl;
 
-import com.it.libreria.dao.PrestitoDAO;
+import com.it.libreria.deprecated.impl.dao.PrestitoDAO;
 import com.it.libreria.model.Prestito;
 import org.springframework.stereotype.Repository;
 

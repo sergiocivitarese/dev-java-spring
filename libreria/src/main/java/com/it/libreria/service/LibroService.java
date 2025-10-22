@@ -1,33 +1,34 @@
 package com.it.libreria.service;
 
-import com.it.libreria.dao.LibroDAO;
 import com.it.libreria.model.Libro;
+import com.it.libreria.repository.LibroRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class LibroService {
-    private final LibroDAO libroDAO;
+    private final LibroRepository libroRepository;
 
-    public LibroService(LibroDAO libroDAO) {
-        this.libroDAO = libroDAO;
+    public LibroService(LibroRepository libroRepository) {
+        this.libroRepository = libroRepository;
     }
-
+    @Transactional
     public void aggiungiLibro(Libro libro) {
-        libroDAO.aggiungiLibro(libro);
+        libroRepository.save(libro);
     }
 
     public Libro cercaLibroPerId(int id) {
-        return libroDAO.cercaPerId(id);
+        return libroRepository.findById(id).orElse(null);
     }
 
     public List<Libro> getTuttiILibri() {
-        return libroDAO.getTutti();
+        return libroRepository.findAll();
     }
-
+    @Transactional
     public void rimuoviLibro(int id) {
-        libroDAO.rimuoviLibro(id);
+        libroRepository.deleteById(id);
     }
 
 

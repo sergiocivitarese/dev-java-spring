@@ -1,19 +1,28 @@
 package com.it.libreria.model;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
+@Entity
 public class Prestito {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_libro")
     private Libro libro;
+    @ManyToOne
+    @JoinColumn(name = "id_utente")
     private Utente utente;
+
     private LocalDate dataInizio;
     private LocalDate dataFine;
     private boolean restituito;
 
     public Prestito() { }
 
-    public Prestito(int id, Libro libro, Utente utente, LocalDate dataInizio, LocalDate dataFine) {
-        this.id = id;
+    public Prestito(Libro libro, Utente utente, LocalDate dataInizio, LocalDate dataFine) {
         this.libro = libro;
         this.utente = utente;
         this.dataInizio = dataInizio;
@@ -24,7 +33,6 @@ public class Prestito {
 
     //getter and setter
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
     public Libro getLibro() { return libro; }
     public void setLibro(Libro libro) { this.libro = libro; }
     public Utente getUtente() { return utente; }

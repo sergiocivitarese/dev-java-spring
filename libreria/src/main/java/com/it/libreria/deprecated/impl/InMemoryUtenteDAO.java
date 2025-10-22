@@ -1,6 +1,6 @@
-package com.it.libreria.dao.impl;
+package com.it.libreria.deprecated.impl;
 
-import com.it.libreria.dao.UtenteDAO;
+import com.it.libreria.deprecated.impl.dao.UtenteDAO;
 import com.it.libreria.model.Utente;
 import org.springframework.stereotype.Repository;
 

@@ -1,33 +1,34 @@
 package com.it.libreria.service;
 
-import com.it.libreria.dao.UtenteDAO;
 import com.it.libreria.model.Utente;
+import com.it.libreria.repository.UtenteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UtenteService {
-    private final UtenteDAO utenteDAO;
+    private final UtenteRepository utenteRepository;
 
-    public UtenteService(UtenteDAO utenteDAO) {
-        this.utenteDAO = utenteDAO;
+    public UtenteService(UtenteRepository utenteRepository) {
+        this.utenteRepository = utenteRepository;
     }
-
+    @Transactional
     public void aggiungiUtente(Utente utente) {
-        utenteDAO.aggiungiUtente(utente);
+        utenteRepository.save(utente);
     }
-
+    @Transactional
     public void rimuoviUtente(int id) {
-        utenteDAO.rimuoviUtente(id) ;
+        utenteRepository.deleteById(id);
     }
 
     public Utente cercaUtentePerId(int id){
-        return utenteDAO.cercaUtentePerId(id);
+        return utenteRepository.findById(id).orElse(null);
     }
 
     public List<Utente> getTuttiGliUtenti() {
-        return utenteDAO.getTutti();
+        return utenteRepository.findAll();
     }
 
 }

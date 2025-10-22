@@ -2,6 +2,7 @@ package com.it.libreria.controller;
 
 import com.it.libreria.model.Prestito;
 import com.it.libreria.service.PrestitoService;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class PrestitoController {
         else
             return ResponseEntity.ok(prestito);
     }
-
+    @Transactional
     @PostMapping
     public ResponseEntity<String> prestaLibro(@RequestBody Map<String, String> payload) {
         int idLibro = Integer.parseInt(payload.get("idLibro"));
@@ -42,7 +43,7 @@ public class PrestitoController {
         prestitoService.prestaLibro(idLibro, idUtente, dataInizio, dataFine);
         return ResponseEntity.ok("Prestito creato correttamente");
     }
-
+    @Transactional
     @PutMapping("/restituisci/{id}")
     public ResponseEntity<String> restituisciLibro(@PathVariable int id) {
         Prestito prestito = prestitoService.cercaPrestitoPerId(id);

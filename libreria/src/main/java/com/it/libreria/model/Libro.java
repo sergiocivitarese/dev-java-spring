@@ -1,7 +1,15 @@
 package com.it.libreria.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance( strategy = InheritanceType.SINGLE_TABLE) // 1 tabella per tutte le sottoclassi
+@DiscriminatorColumn(name="tipo", discriminatorType = DiscriminatorType.STRING)
 public abstract class Libro {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String titolo;
     private String autore;
     private int annoPubblicazione;

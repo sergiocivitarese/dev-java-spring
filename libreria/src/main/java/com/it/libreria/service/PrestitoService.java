@@ -1,11 +1,12 @@
 package com.it.libreria.service;
 
-import com.it.libreria.dao.LibroDAO;
-import com.it.libreria.dao.PrestitoDAO;
-import com.it.libreria.dao.UtenteDAO;
 import com.it.libreria.model.Libro;
 import com.it.libreria.model.Prestito;
 import com.it.libreria.model.Utente;
+import com.it.libreria.repository.LibroRepository;
+import com.it.libreria.repository.PrestitoRepository;
+import com.it.libreria.repository.UtenteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,19 +14,20 @@ import java.util.List;
 
 @Service
 public class PrestitoService {
-    private final PrestitoDAO prestitoDAO;
-    private final LibroDAO libroDAO;
-    private final UtenteDAO utenteDAO;
+    private final LibroRepository libroRepository;
+    private final UtenteRepository utenteRepository;
+    private final PrestitoRepository prestitoRepository;
 
-    public PrestitoService(PrestitoDAO prestitoDAO, LibroDAO libroDAO, UtenteDAO utenteDAO) {
-        this.prestitoDAO = prestitoDAO;
-        this.libroDAO = libroDAO;
-        this.utenteDAO = utenteDAO;
+    public PrestitoService(LibroRepository libroRepository, UtenteRepository utenteRepository, PrestitoRepository prestitoRepository) {
+        this.libroRepository = libroRepository;
+        this.utenteRepository = utenteRepository;
+        this.prestitoRepository = prestitoRepository;
     }
 
+    @Transactional
     public void prestaLibro(int idLibro, int idUtente, LocalDate dataInzio, LocalDate dataFine) {
-        Libro libro = libroDAO.cercaPerId(idLibro);
-        Utente utente = utenteDAO.cercaUtentePerId(idUtente);
+        Libro libro = libroRepository.findById(idLibro).orElse(null);
+        Utente utente = utenteRepository.findById(idUtente).orElse(null);
 
         if(libro == null || utente == null) {
             throw new IllegalArgumentException("Libro o utente non trovato");
@@ -37,14 +39,15 @@ public class PrestitoService {
 
         //se non genero eccezioni posso elaborare il prestito
         libro.setDisponibile(false);
-        int newIdPrestito = prestitoDAO.getTutti().size() + 1; //calcolo l'id del nuovo prestito
-        Prestito prestito = new Prestito(newIdPrestito, libro, utente, dataInzio, dataFine);
-        prestitoDAO.aggiungiPrestito(prestito);
+        // l'id del nuovo prestito viene calcolato in modo automatico da jpa per tanto non lo passo
+        Prestito prestito = new Prestito(libro, utente, dataInzio, dataFine);
+        prestitoRepository.save(prestito);
     }
 
     //elimina prestito --> si genera con la restituzione del libro
+    @Transactional
     public void restituisciLibro(int idPrestito) {
-        Prestito prestito = prestitoDAO.cercaPerId(idPrestito);
+        Prestito prestito = prestitoRepository.findById(idPrestito).orElse(null);
         if(prestito == null) {
             throw new IllegalArgumentException("prestito non trovato");
         }
@@ -54,15 +57,15 @@ public class PrestitoService {
         }
         //se non genero nessuna eccezione restituisco
         prestito.restituisci();
-        prestitoDAO.rimuoviPrestito(idPrestito);
+        prestitoRepository.deleteById(idPrestito);
     }
 
     public List<Prestito> getTuttiIPrestiti() {
-        return prestitoDAO.getTutti();
+        return prestitoRepository.findAll();
     }
 
     public Prestito cercaPrestitoPerId(int id) {
-        return prestitoDAO.cercaPerId(id);
+        return prestitoRepository.findById(id).orElse(null);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.it.libreria.dao;
+package com.it.libreria.deprecated.impl.dao;
 
 import com.it.libreria.model.Utente;
 

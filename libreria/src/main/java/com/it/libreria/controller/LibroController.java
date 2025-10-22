@@ -30,12 +30,7 @@ public class LibroController {
     //GET/api/libri/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Libro> cercaLibroPerId(@PathVariable int id) {
-        Libro libro = libroService.getTuttiILibri()
-                .stream()
-                .filter(l->l.getId() == id)
-                .findFirst()
-                .orElse(null);
-
+        Libro libro = libroService.cercaLibroPerId(id);
         if(libro == null)
             return ResponseEntity.notFound().build();
         //se tutto ok ritorno
@@ -59,12 +54,7 @@ public class LibroController {
     // DELETE /api/libri/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminaLibro(@PathVariable int id) {
-        Libro libro = libroService.getTuttiILibri()
-                .stream()
-                .filter(l -> l.getId() == id)
-                .findFirst()
-                .orElse(null);
-
+        Libro libro = libroService.cercaLibroPerId(id);
         if(libro == null)
             return ResponseEntity.notFound().build();
 

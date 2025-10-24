@@ -2,6 +2,7 @@ package com.it.libreria.service;
 
 import com.it.libreria.model.Utente;
 import com.it.libreria.repository.UtenteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class UtenteService {
     }
 
     public Utente cercaUtentePerId(int id){
-        return utenteRepository.findById(id).orElse(null);
+        return utenteRepository.findById(id).orElseThrow( () -> new EntityNotFoundException("Utente con ID "+ id + " non trovato"));
     }
 
     public List<Utente> getTuttiGliUtenti() {

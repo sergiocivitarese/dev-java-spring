@@ -6,6 +6,7 @@ import com.it.libreria.model.Utente;
 import com.it.libreria.repository.LibroRepository;
 import com.it.libreria.repository.PrestitoRepository;
 import com.it.libreria.repository.UtenteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +27,11 @@ public class PrestitoService {
 
     @Transactional
     public void prestaLibro(int idLibro, int idUtente, LocalDate dataInzio, LocalDate dataFine) {
-        Libro libro = libroRepository.findById(idLibro).orElse(null);
-        Utente utente = utenteRepository.findById(idUtente).orElse(null);
+        Libro libro = libroRepository.findById(idLibro).orElseThrow( () -> new EntityNotFoundException("Libro con ID "+ idLibro + " non trovato"));
+        Utente utente = utenteRepository.findById(idUtente).orElseThrow( () -> new EntityNotFoundException("Utente con ID "+ idUtente + " non trovato"));
 
         if(libro == null || utente == null) {
-            throw new IllegalArgumentException("Libro o utente non trovato");
+            throw new IllegalStateException("Libro o utente non trovato");
         }
 
         //se il libro non è disponibile
@@ -47,12 +48,12 @@ public class PrestitoService {
     //elimina prestito --> si genera con la restituzione del libro
     @Transactional
     public void restituisciLibro(int idPrestito) {
-        Prestito prestito = prestitoRepository.findById(idPrestito).orElse(null);
+        Prestito prestito = prestitoRepository.findById(idPrestito).orElseThrow( () -> new EntityNotFoundException("Prestito con ID "+ idPrestito + " non trovato"));
         if(prestito == null) {
-            throw new IllegalArgumentException("prestito non trovato");
+            throw new IllegalStateException("prestito non trovato");
         }
 
-        if(prestito.isRestituito()){
+        if(prestito.isRestituito()) {
             throw new IllegalStateException("il libro è gia stato restituito");
         }
         //se non genero nessuna eccezione restituisco
@@ -65,7 +66,7 @@ public class PrestitoService {
     }
 
     public Prestito cercaPrestitoPerId(int id) {
-        return prestitoRepository.findById(id).orElse(null);
+        return prestitoRepository.findById(id).orElseThrow( () -> new EntityNotFoundException("Prestito con ID "+ id + " non trovato"));
     }
 
 }

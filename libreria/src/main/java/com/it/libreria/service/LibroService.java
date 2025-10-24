@@ -2,6 +2,7 @@ package com.it.libreria.service;
 
 import com.it.libreria.model.Libro;
 import com.it.libreria.repository.LibroRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class LibroService {
     }
 
     public Libro cercaLibroPerId(int id) {
-        return libroRepository.findById(id).orElse(null);
+        return libroRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Libro con ID " + id + " non trovato"));
     }
 
     public List<Libro> getTuttiILibri() {

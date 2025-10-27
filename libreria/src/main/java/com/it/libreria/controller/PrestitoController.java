@@ -33,6 +33,7 @@ public class PrestitoController {
         else
             return ResponseEntity.ok(prestito);
     }
+
     @Transactional
     @PostMapping
     public ResponseEntity<String> prestaLibro(@RequestBody Map<String, String> payload) {
